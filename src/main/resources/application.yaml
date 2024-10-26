@@ -1,0 +1,22 @@
+server:
+  port: 8082
+spring:
+  application:
+    name: contas
+  data:
+    mongodb:
+      authentication-database: admin
+      #uri: mongodb://root:example@localhost:27017/tech-challenge-orders?authSource=admin&replicaSet=myRepl
+      host: localhost
+      port: 27017
+      database: contas
+      username: root
+      password: example
+
+swagger:
+  title: Api de cadastro de contas
+  version: 1.0
+  description: APi para cadastro e pesquisa de Contas
+  contact:
+    name: Daniel A. Correa
+    email: daniel.cor@outlook.com
