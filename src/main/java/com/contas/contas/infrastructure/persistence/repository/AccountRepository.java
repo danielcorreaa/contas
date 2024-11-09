@@ -7,7 +7,9 @@ import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
 
-public interface AccountRepository extends MongoRepository<AccountDocument, ObjectId> {
-    @Query("{active:true}")
-    List<AccountDocument> findActiveAll();
+public interface AccountRepository extends MongoRepository<AccountDocument, String> {
+    @Query("{active:true, user: ?0}")
+    List<AccountDocument> findActiveAll(String user);
+    @Query("{user:?0}")
+    List<AccountDocument> findAllByUser(String user);
 }

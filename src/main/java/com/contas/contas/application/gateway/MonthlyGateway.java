@@ -11,6 +11,6 @@ public interface MonthlyGateway {
 
     Monthly save(Monthly monthly);
     Monthly edit(Monthly monthly);
-    Pagination findAll(int page, int size);
+    Pagination findAll(String user,int page, int size);
     Optional<Monthly> findById(String id);
 }

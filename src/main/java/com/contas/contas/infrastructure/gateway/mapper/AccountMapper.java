@@ -12,9 +12,8 @@ import java.util.Optional;
 public class AccountMapper {
 
     public AccountDocument accountDocument(Account account){
-        ObjectId id = null == account.getId() ? ObjectId.get() : new ObjectId(account.getId());
-        return new AccountDocument( id ,
-                account.getName(), account.getValor(), account.getCheck(), account.getActive());
+        return new AccountDocument( account.getId() ,
+                account.getName(), account.getValor(), account.getCheck(), account.getActive(), account.getUser());
     }
 
     public List<AccountDocument> accountDocuments(List<Account> account){

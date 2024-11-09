@@ -11,15 +11,12 @@ public class Account {
     private BigDecimal valor;
     private Boolean check;
     private Boolean active;
+    private String user;
 
-    public Account(String name) {
+    public Account(String name, String user) {
         this.name = name;
-        this.active = Boolean.TRUE;
-    }
-
-    public Account(String id, String name) {
-        this.id = id;
-        this.name = name;
+        this.user = user;
+        this.id = AccountId.getId(name, user);
         this.active = Boolean.TRUE;
     }
 
@@ -63,4 +60,7 @@ public class Account {
         return active;
     }
 
+    public String getUser() {
+        return user;
+    }
 }

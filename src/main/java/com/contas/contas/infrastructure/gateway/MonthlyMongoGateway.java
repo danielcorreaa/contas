@@ -35,13 +35,9 @@ public class MonthlyMongoGateway implements MonthlyGateway {
     }
 
 
-    public Pagination findAll(int page, int size) {
-        Map<String, Object>  response = new HashMap<>();
+    public Pagination findAll(String user,int page, int size) {
         var pagination = PageRequest.of(page,size);
-        var all = monthlyRepository.findAll(pagination);
-        response.put("total", all.getTotalElements());
-        response.put("content", all.getContent());
-        response.put("hasNext", all.hasNext());
+        var all = monthlyRepository.findAlByUser(user, pagination);
         return Pagination
                 .PaginationBuilder
                 .aPagination()

@@ -21,3 +21,8 @@ swagger:
   contact:
     name: Daniel A. Correa
     email: daniel.cor@outlook.com
+
+api:
+  security:
+    token:
+      secret: 123445

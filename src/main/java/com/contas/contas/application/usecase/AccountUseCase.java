@@ -10,6 +10,6 @@ public interface AccountUseCase {
 
     Account inactive(String id);
     List<Account> saveAll(List<Account> account);
-    List<Account> findAllActive();
-    List<Account> findAll();
+    List<Account> findAllActiveByUser(String user);
+    List<Account> findAllByUser(String user);
 }

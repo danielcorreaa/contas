@@ -6,12 +6,15 @@ import com.contas.contas.application.usecase.interactor.AccountInteractorUseCase
 import com.contas.contas.config.response.Result;
 import com.contas.contas.domain.Account;
 import com.contas.contas.infrastructure.controller.dto.AccountDto;
+import com.contas.contas.infrastructure.controller.dto.AccountRequest;
 import com.contas.contas.infrastructure.controller.mapper.AccountApiMapper;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.Getter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("account")
@@ -28,9 +31,9 @@ public class AccountControler {
 
 
     @PostMapping
-    public ResponseEntity<Result<List<AccountDto>>> insert( @RequestBody List<String> namesAccounts){
+    public ResponseEntity<Result<List<AccountDto>>> insert(@RequestBody AccountRequest request){
         AccountUseCase accountUseCase  = new AccountInteractorUseCase(accountGateway);
-        var accounts = namesAccounts.stream().map(Account::new).toList();
+        var accounts =  accountApiMapper.toAcconts(request);
         var accountsResponse = accountUseCase.saveAll(accounts);
         return ResponseEntity.ok(Result.ok(accountApiMapper.toAccountsDto(accountsResponse)));
     }
@@ -43,13 +46,15 @@ public class AccountControler {
     }
 
     @GetMapping("/{active}")
-    public ResponseEntity<Result<List<AccountDto>>> findAll(@PathVariable Boolean active){
+    public ResponseEntity<Result<List<AccountDto>>> findAll(
+            @Parameter(hidden = true)
+            @RequestHeader(value = "user", required = false) String user, @PathVariable Boolean active){
         AccountUseCase accountUseCase  = new AccountInteractorUseCase(accountGateway);
         List<Account> accountsResponse = null;
         if(Boolean.TRUE.equals(active)){
-            accountsResponse = accountUseCase.findAllActive();
+            accountsResponse = accountUseCase.findAllActiveByUser(user);
         } else {
-            accountsResponse = accountUseCase.findAll();
+            accountsResponse = accountUseCase.findAllByUser(user);
         }
 
         return ResponseEntity.ok(Result.ok(accountApiMapper.toAccountsDto(accountsResponse)));

@@ -32,14 +32,15 @@ public class MonthlyInteractorUseCase implements MonthlyUseCase {
     }
 
     @Override
-    public Monthly createAccountByMonthly() {
-        var maybeMonthLy = findById(MonthlyId.getId(LocalDate.now()));
-        if(maybeMonthLy.isPresent()){
-            throw new BusinessException("Monthly already exist for month");
-        }
-        List<Account> accounts = accountUseCase.findAllActive();
-        Monthly monthly = new Monthly(accounts);
+    public Monthly createAccountByMonthly(String id) {
+        List<Account> accounts = accountUseCase.findAllActiveByUser(getUser(id));
+        findById(id).ifPresent(Monthly::clearAccount);
+        Monthly monthly = new Monthly(id, getUser(id), accounts);
         return monthlyGateway.save(monthly);
+    }
+
+    private static String getUser(String id) {
+        return id.split("--")[2];
     }
 
     @Override
@@ -48,8 +49,8 @@ public class MonthlyInteractorUseCase implements MonthlyUseCase {
     }
 
     @Override
-    public Pagination findAll(int page, int size) {
-        return monthlyGateway.findAll(page, size);
+    public Pagination findAll(String user, int page, int size) {
+        return monthlyGateway.findAll(user, page, size);
     }
 
     @Override

@@ -10,11 +10,13 @@ import com.contas.contas.config.exceptions.NotFoundException;
 import com.contas.contas.config.response.Result;
 import com.contas.contas.domain.Account;
 import com.contas.contas.domain.Monthly;
+import com.contas.contas.domain.MonthlyId;
 import com.contas.contas.infrastructure.controller.dto.AccountDto;
 import com.contas.contas.infrastructure.controller.dto.MonthlyDto;
 import com.contas.contas.infrastructure.controller.dto.MonthlyRequest;
 import com.contas.contas.infrastructure.controller.mapper.MonthlyApiMapper;
 import com.contas.contas.infrastructure.dto.Pagination;
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,11 +37,13 @@ public class MonthlyController {
         this.monthlyApiMapper = monthlyApiMapper;
     }
 
-    @PostMapping
-    public ResponseEntity<Result<MonthlyDto>> create(){
+    @PostMapping("{id}")
+    public ResponseEntity<Result<MonthlyDto>> create(
+            @Parameter(hidden = true) @RequestHeader(value = "user", required = false) String user,
+            @PathVariable String id){
         AccountUseCase accountUseCase = new AccountInteractorUseCase(accountGateway);
         MonthlyUseCase monthlyUseCase  = new MonthlyInteractorUseCase(monthlyGateway, accountUseCase);
-        Monthly accountByMonthly = monthlyUseCase.createAccountByMonthly();
+        Monthly accountByMonthly = monthlyUseCase.createAccountByMonthly(MonthlyId.getId(id, user));
         return ResponseEntity.ok(Result.ok(monthlyApiMapper.toMonthly(accountByMonthly)));
     }
 
@@ -52,19 +56,22 @@ public class MonthlyController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Result<MonthlyDto>> findById(@PathVariable String id){
+    public ResponseEntity<Result<MonthlyDto>> findById(
+            @Parameter(hidden = true) @RequestHeader(value = "user", required = false) String user,
+            @PathVariable String id){
         AccountUseCase accountUseCase = new AccountInteractorUseCase(accountGateway);
         MonthlyUseCase monthlyUseCase  = new MonthlyInteractorUseCase(monthlyGateway, accountUseCase);
-        Monthly monthly = monthlyUseCase.findById(id).orElseThrow(() -> new NotFoundException("Monthly not found"));
+        Monthly monthly = monthlyUseCase.findById(MonthlyId.getId(id, user)).orElseThrow(() -> new NotFoundException("Monthly not found"));
         return ResponseEntity.ok(Result.ok(monthlyApiMapper.toMonthly(monthly)));
     }
 
-    @GetMapping
-    public ResponseEntity<Result<List<MonthlyDto>>> findAll(@RequestParam(defaultValue = "0") int page,
+    @GetMapping("")
+    public ResponseEntity<Result<List<MonthlyDto>>> findAll(@Parameter(hidden = true) @RequestHeader(value = "user", required = false) String user,
+                                                            @RequestParam(defaultValue = "0") int page,
                                                             @RequestParam(defaultValue = "10")int size){
         AccountUseCase accountUseCase = new AccountInteractorUseCase(accountGateway);
         MonthlyUseCase monthlyUseCase  = new MonthlyInteractorUseCase(monthlyGateway, accountUseCase);
-        Pagination pagination = monthlyUseCase.findAll(page, size);
+        Pagination pagination = monthlyUseCase.findAll(user, page, size);
         return ResponseEntity.ok(Result.ok(monthlyApiMapper.toMonthlies(pagination.getMonthlies()), pagination.getNext(), pagination.getTotal()));
     }
 }

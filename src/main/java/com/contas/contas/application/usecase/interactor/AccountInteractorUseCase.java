@@ -29,13 +29,15 @@ public class AccountInteractorUseCase implements AccountUseCase {
         return accountGateway.saveAll(account);
     }
 
+
+
     @Override
-    public List<Account> findAllActive() {
-        return accountGateway.findAllActive();
+    public List<Account> findAllActiveByUser(String user) {
+        return accountGateway.findAllActive(user);
     }
 
     @Override
-    public List<Account> findAll() {
-        return accountGateway.findAll();
+    public List<Account> findAllByUser(String user) {
+        return accountGateway.findAll(user);
     }
 }
