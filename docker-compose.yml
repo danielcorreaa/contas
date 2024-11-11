@@ -5,8 +5,8 @@ services:
     image: nginx:1.21-alpine 
     restart: always    
     volumes:
-      - /nginx:/etc/nginx
-      - /cert:/cert:ro 
+      - /app/contas/nginx:/etc/nginx
+      - /app/contas/cert:/cert:ro 
     ports:
       - "80:80"
       - "443:443"
