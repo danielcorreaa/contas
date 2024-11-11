@@ -18,12 +18,13 @@ import java.math.BigDecimal;
 public class AccountDocument {
 
     @Id
-    private ObjectId id;
+    private String id;
     private String name;
 
     private BigDecimal valor;
     private Boolean check;
     private Boolean active;
+    private String user;
 
 
 }

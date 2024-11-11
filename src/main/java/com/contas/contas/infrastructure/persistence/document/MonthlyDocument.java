@@ -24,5 +24,6 @@ public class MonthlyDocument {
     private LocalDate createdDate;
     private LocalDate updateDate;
     private List<AccountDocument> accounts;
+    private String user;
 
 }

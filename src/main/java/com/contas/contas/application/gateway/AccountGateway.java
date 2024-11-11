@@ -8,8 +8,8 @@ public interface AccountGateway {
 
     Account edit(Account account);
     List<Account> saveAll(List<Account> account);
-    List<Account> findAllActive();
+    List<Account> findAllActive(String user);
 
     Account inactive(String id);
-    List<Account> findAll();
+    List<Account> findAll(String user);
 }

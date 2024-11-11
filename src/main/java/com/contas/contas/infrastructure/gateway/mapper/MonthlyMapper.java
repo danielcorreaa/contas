@@ -18,11 +18,11 @@ public class MonthlyMapper {
 
     public MonthlyDocument monthlyDocument(Monthly monthly) {
         return new MonthlyDocument(monthly.getId(),monthly.getCreatedDate(),
-                monthly.getUpdateDate(), accountMapper.accountDocuments(monthly.getAccounts()));
+                monthly.getUpdateDate(), accountMapper.accountDocuments(monthly.getAccounts()), monthly.getUser());
     }
 
     public Monthly monthly(MonthlyDocument save) {
-        return new Monthly(save.getId(), accountMapper.toAccount(save.getAccounts()));
+        return Monthly.copy(save.getId(), save.getCreatedDate(), save.getUpdateDate() ,accountMapper.toAccount(save.getAccounts()), save.getUser());
     }
 
     public List<Monthly> toMonthlies(List<MonthlyDocument> all) {

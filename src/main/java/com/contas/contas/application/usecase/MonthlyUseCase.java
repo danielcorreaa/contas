@@ -9,9 +9,9 @@ import java.util.Optional;
 public interface MonthlyUseCase {
 
     Optional<Monthly> findById(String id);
-    Monthly createAccountByMonthly();
+    Monthly createAccountByMonthly(String id);
     Monthly edit(Monthly monthly);
-    Pagination findAll(int page, int size);
+    Pagination findAll(String user, int page, int size);
 
     Monthly checkAccount(MonthlyRequest request);
 }

@@ -35,20 +35,20 @@ public class AccountMongoGateway implements AccountGateway {
     }
 
     @Override
-    public List<Account> findAllActive() {
-        return mapper.toAccount(accountRepository.findActiveAll());
+    public List<Account> findAllActive(String user) {
+        return mapper.toAccount(accountRepository.findActiveAll(user));
     }
 
     @Override
     public Account inactive(String id) {
         AccountDocument document =
-                accountRepository.findById(new ObjectId(id)).orElseThrow(() -> new NotFoundException("Account not found"));
+                accountRepository.findById(id).orElseThrow(() -> new NotFoundException("Account not found"));
         document.setActive(Boolean.FALSE);
         return mapper.account(accountRepository.save(document));
     }
 
     @Override
-    public List<Account> findAll() {
-        return mapper.toAccount(accountRepository.findAll());
+    public List<Account> findAll(String user) {
+        return mapper.toAccount(accountRepository.findAllByUser(user));
     }
 }
