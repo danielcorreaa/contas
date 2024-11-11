@@ -1,6 +1,21 @@
 version: '3.2'
- 
+
 services:
+  nginx:
+    image: nginx:1.21-alpine 
+    restart: always    
+    volumes:
+      - /nginx:/etc/nginx
+      - /cert:/cert:ro 
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - app
+    links:
+      - app
+    networks:
+      - ambiente
   mongodb:
     image: mongo:latest
     restart: always
@@ -12,32 +27,12 @@ services:
       MONGO_INITDB_ROOT_DATABASE: contas
     networks:
       - ambiente
-      - base
-
-  mongo-express:
-    image: mongo-express
-    restart: always
-    ports:
-      - 8081:8081
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: example
-      ME_CONFIG_BASICAUTH_USERNAME: daniel
-      ME_CONFIG_BASICAUTH_PASSWORD: daniCorrea2019!
-      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
-    links:
-      - mongodb
-    networks:
-      - base
-
   app:
     restart: always
-    container_name: App
-    build:
-      context: .
+    container_name: app
+    image: daniel36/contas:latest
     ports:
-      - "8000:8000"
-      - "8085:8082"
+      - "8082:8082"
     environment:
       MONGO_HOST: mongodb
       MONGO_USERNAME: root
@@ -48,7 +43,9 @@ services:
       - mongodb
     networks:
       - ambiente
-networks: 
+
+
+networks:
   ambiente:
     driver: bridge
   base:
