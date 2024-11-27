@@ -20,4 +20,4 @@ sudo systemctl start docker
 
 sudo usermod -aG docker danielaleixocorrea35
 
-docker --version
+newgrp docker
