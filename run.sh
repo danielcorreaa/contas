@@ -18,6 +18,6 @@ sudo systemctl stop docker
 
 sudo systemctl start docker
 
-sudo usermod -aG docker linuxuser
+sudo usermod -aG docker danielaleixocorrea35
 
 docker --version
