@@ -21,3 +21,5 @@ sudo systemctl start docker
 sudo usermod -aG docker danielaleixocorrea35
 
 newgrp docker
+
+docker compose up -doc
