@@ -15,6 +15,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MonthlyInteractorUseCase implements MonthlyUseCase {
 
@@ -36,6 +39,19 @@ public class MonthlyInteractorUseCase implements MonthlyUseCase {
         List<Account> accounts = accountUseCase.findAllActiveByUser(getUser(id));
         findById(id).ifPresent(Monthly::clearAccount);
         Monthly monthly = new Monthly(id, getUser(id), accounts);
+        return monthlyGateway.save(monthly);
+    }
+
+    @Override
+    public Monthly updateAccountByMonthly(String id) {
+        List<Account> accounts = accountUseCase.findAllActiveByUser(getUser(id));
+        Monthly monthly = findById(id).orElseThrow(() -> new BusinessException("Monthly not found"));
+
+        List<Account> accountsWithValues = monthly.getAccounts().stream()
+                .filter(account -> Optional.ofNullable(account.getValor()).isPresent()).toList();
+        accounts.removeIf(accountsWithValues::contains);
+        Set<Account> concat = Stream.concat(accounts.stream(), monthly.getAccounts().stream()).collect(Collectors.toSet());
+        monthly.addAccounts(concat);
         return monthlyGateway.save(monthly);
     }
 

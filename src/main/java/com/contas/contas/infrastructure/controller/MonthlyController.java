@@ -47,6 +47,16 @@ public class MonthlyController {
         return ResponseEntity.ok(Result.ok(monthlyApiMapper.toMonthly(accountByMonthly)));
     }
 
+    @PutMapping("{id}")
+    public ResponseEntity<Result<MonthlyDto>> update(
+            @Parameter(hidden = true) @RequestHeader(value = "user", required = false) String user,
+            @PathVariable String id){
+        AccountUseCase accountUseCase = new AccountInteractorUseCase(accountGateway);
+        MonthlyUseCase monthlyUseCase  = new MonthlyInteractorUseCase(monthlyGateway, accountUseCase);
+        Monthly accountByMonthly = monthlyUseCase.updateAccountByMonthly(MonthlyId.getId(id, user));
+        return ResponseEntity.ok(Result.ok(monthlyApiMapper.toMonthly(accountByMonthly)));
+    }
+
     @PutMapping
     public ResponseEntity<Result<MonthlyDto>> checkAccount(@RequestBody MonthlyRequest request){
             AccountUseCase accountUseCase = new AccountInteractorUseCase(accountGateway);

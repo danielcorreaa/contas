@@ -10,6 +10,7 @@ public interface MonthlyUseCase {
 
     Optional<Monthly> findById(String id);
     Monthly createAccountByMonthly(String id);
+    Monthly updateAccountByMonthly(String id);
     Monthly edit(Monthly monthly);
     Pagination findAll(String user, int page, int size);
 
