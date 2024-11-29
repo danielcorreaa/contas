@@ -1,12 +1,11 @@
 package com.contas.contas.domain;
 
 import com.contas.contas.config.exceptions.BusinessException;
+import org.springframework.web.servlet.tags.form.SelectTag;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static java.lang.String.*;
 
@@ -66,10 +65,25 @@ public class Monthly {
     public void clearAccount() {
         this.accounts = new ArrayList<>();
     }
+    public void addAccounts(Set<Account> accounts){
+        clearAccount();
+        this.accounts.addAll(accounts);
+    }
 
     public static Monthly copy(String id, LocalDate createdDate, LocalDate updateDate, List<Account> accounts, String user){
         return new Monthly(id, createdDate, updateDate, accounts, user);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Monthly monthly = (Monthly) o;
+        return Objects.equals(id, monthly.id);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

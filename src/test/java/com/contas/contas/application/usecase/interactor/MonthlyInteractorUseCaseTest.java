@@ -114,4 +114,40 @@ class MonthlyInteractorUseCaseTest {
 
         Assertions.assertEquals(3, maybeMonthly.get().getAccounts().size());
     }
+
+    @Test
+    void testUpdateAccountByMonthly() {
+        String id = MonthlyId.getId(LocalDate.now(), "user2");
+        var accountsUser1 = List.of(new Account("Luz","user2"),
+                new Account("Internet","user2"),new Account("Cartão","user2"));
+        accountUseCase.saveAll(accountsUser1);
+
+        monthlyUseCase.createAccountByMonthly(id);
+
+        MonthlyRequest request = new MonthlyRequest(id, "Internet--user2", new BigDecimal("22.0"),true);
+        monthlyUseCase.checkAccount(request);
+
+        accountUseCase.saveAll(List.of(new Account("Aluguel","user2")));
+
+        monthlyUseCase.updateAccountByMonthly(id);
+
+        Optional<Monthly> maybeMonthly = monthlyUseCase.findById(id);
+
+        var internet = maybeMonthly.get().getAccounts().stream().filter(account -> account.getId().equals("Internet--user2")).findFirst().orElse(null);
+
+
+        Assertions.assertEquals(id, maybeMonthly.get().getId());
+
+        Assertions.assertEquals(List.of("Aluguel--user2","Luz--user2, Cartão--user2", "Internet--user2").toString(),
+                maybeMonthly.get().getAccounts().stream().map(Account::getId).toList().toString());
+
+        Assertions.assertEquals( new BigDecimal("22.0"), internet.getValor());
+
+        Assertions.assertEquals(4, maybeMonthly.get().getAccounts().size());
+
+
+
+    }
+
+
 }
