@@ -28,7 +28,7 @@ services:
     networks:
       - ambiente
     volumes: 
-      - gs://contas-db/:/data/db
+      - .contas-db:/data/db
   app:
     restart: always
     container_name: app
